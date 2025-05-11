@@ -24,21 +24,8 @@ jobs:
     - name: Install Dependencies
       run: composer install --no-dev --optimize-autoloader
 
-    - name: Deploy via FTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: ${{ secrets.DIRECTORY }}
-        exclude: |
-          **/.git*/**
-          **/.github*/**
-          **/tests*/**
-
     - name: Rename .env
-      run: cp .env.example .env
+      run: mv .env.example .env
 
     - name: Inject Production Environment Variables
       run: |
@@ -51,6 +38,19 @@ jobs:
         echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
+    - name: Deploy via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./
+        server-dir: ${{ secrets.DIRECTORY }}
+        exclude: |
+          **/.git*/**
+          **/.github*/**
+          **/tests*/**
 
     - name: Generate Application Key
       run: php artisan key:generate --force
