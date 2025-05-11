@@ -86,6 +86,7 @@ class Transanction extends Controller
                     'status' => 100,
                     'message' => 'Transaction Initiated. Processing...',
                     'transactionReference' => $transaction->reference_number,
+                    'data' => $transaction,
                 ],
                 202
             );
@@ -101,7 +102,7 @@ class Transanction extends Controller
 
     public function checkTransactionStatus(Request $request)
     {
-    
+
         $transaction = \App\Models\Transanction::where('reference_number', $request->transactionReference)->first();
 
         if (!$transaction) {
