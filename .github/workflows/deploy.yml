@@ -24,12 +24,13 @@ jobs:
     - name: Install Dependencies
       run: composer install --no-dev --optimize-autoloader
 
-    - name: Rename .env
-      run: cp .env.example .env
-
+    - name: Clean .env
+      run: rm -f .env
+      
     - name: Inject Production Environment Variables
       run: |
         echo "APP_ENV=production" >> .env
+        echo "APP_DEBUG=false" >> .env
         echo "APP_URL=${{ secrets.BACKEND_APP_URL }}" >> .env
         echo "FRONTEND_URL=${{ secrets.CLIENT_APP_URL }}" >> .env
         echo "DB_CONNECTION=${{ secrets.DB_CONNECTION }}" >> .env
@@ -38,9 +39,6 @@ jobs:
         echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-
-    - name: List files before FTP
-      run: ls -la
 
     - name: Deploy via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
