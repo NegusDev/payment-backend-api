@@ -54,11 +54,11 @@ jobs:
     - name: Generate Application Key
       run: php artisan key:generate --force 
 
-    - name: Run Migrations
-      run: php artisan migrate --force
-
     - name: Run Laravel Optimizations 
       run: |
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
+
+    - name: Run Migrations
+      run: php artisan migrate --force
