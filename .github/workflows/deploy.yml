@@ -32,9 +32,9 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: payment-api.cns.ug/
         exclude: |
-          **/.git*
-          **/.github*
-          **/tests/*
+          **/.git*/**
+          **/.github*/**
+          **/tests*/**
 
     - name: Rename .env
       run: mv .env.example .env
