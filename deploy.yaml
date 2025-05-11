@@ -24,6 +24,20 @@ jobs:
     - name: Install Dependencies
       run: composer install --no-dev --optimize-autoloader
 
+    - name: Deploy via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./
+        server-dir: ${{ secrets.DIRECTORY }}
+        exclude: |
+          **/.git/*
+          **/.github/*
+          **/node_modules/*
+          **/tests/*
+
     - name: Rename .env
       run: mv .env.example .env
 
@@ -50,17 +64,3 @@ jobs:
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
-
-    - name: Deploy via FTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: ${{ secrets.DIRECTORY }}
-        exclude: |
-          **/.git/*
-          **/.github/*
-          **/node_modules/*
-          **/tests/*
