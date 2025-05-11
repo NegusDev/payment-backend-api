@@ -36,6 +36,25 @@ jobs:
           **/.github*/**
           **/tests*/**
 
+    - name: Debug - Print DB Environment Variables
+      run: |
+        echo "DB_HOST: ${{ secrets.DB_HOST }}"
+        echo "DB_PORT: ${{ secrets.DB_PORT }}"
+        echo "DB_DATABASE: ${{ secrets.DB_DATABASE }}"
+        echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
+        echo "DB_PASSWORD: ${{ secrets.DB_PASSWORD }}"
+
+    - name: Debug - Test Database Connection
+      run: |
+        php -r '
+          try {
+            $pdo = new PDO("mysql:host=${{ secrets.DB_HOST }};port=${{ secrets.DB_PORT }};dbname=${{ secrets.DB_DATABASE }}", "${{ secrets.DB_USERNAME }}", "${{ secrets.DB_PASSWORD }}");
+            echo "Connection successful!";
+          } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+          }
+        '
+        
     - name: Rename .env
       run: mv .env.example .env
 
