@@ -25,7 +25,7 @@ jobs:
       run: composer install --no-dev --optimize-autoloader
 
     - name: Rename .env
-      run: mv .env.sample .env
+      run: mv .env.example .env
 
     - name: Inject Production Environment Variables
       run: |
