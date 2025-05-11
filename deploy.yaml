@@ -24,26 +24,13 @@ jobs:
     - name: Install Dependencies
       run: composer install --no-dev --optimize-autoloader
 
-    - name: Deploy via FTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: ${{ secrets.DIRECTORY }}
-        exclude: |
-          **/.git/*
-          **/.github/*
-          **/node_modules/*
-          **/tests/*
-
-    - name: Rename .env
-      run: mv .env.example .env
-
+    - name: Clean .env
+      run: rm -f .env
+      
     - name: Inject Production Environment Variables
       run: |
         echo "APP_ENV=production" >> .env
+        echo "APP_DEBUG=false" >> .env
         echo "APP_URL=${{ secrets.BACKEND_APP_URL }}" >> .env
         echo "FRONTEND_URL=${{ secrets.CLIENT_APP_URL }}" >> .env
         echo "DB_CONNECTION=${{ secrets.DB_CONNECTION }}" >> .env
@@ -53,11 +40,22 @@ jobs:
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
+    - name: Deploy via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ${{ secrets.DIRECTORY }}
+        exclude: |
+          **/.git*/**
+          **/.github*/**
+          **/tests*/**
+          payment_db.sql
+          deploy.yaml
+
     - name: Generate Application Key
       run: php artisan key:generate --force
-
-    - name: Run Migrations
-      run: php artisan migrate --force
 
     - name: Run Laravel Optimizations
       run: |
