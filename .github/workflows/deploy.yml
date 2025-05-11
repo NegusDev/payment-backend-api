@@ -51,6 +51,8 @@ jobs:
           **/.git*/**
           **/.github*/**
           **/tests*/**
+        include: |
+          .env
 
     - name: Generate Application Key
       run: php artisan key:generate --force
