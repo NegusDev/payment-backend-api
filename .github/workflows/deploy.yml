@@ -48,14 +48,11 @@ jobs:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
         server-dir: ${{ secrets.DIRECTORY }}
         exclude: |
           **/.git*/**
           **/.github*/**
           **/tests*/**
-        include: |
-          .env
 
     - name: Generate Application Key
       run: php artisan key:generate --force
