@@ -38,7 +38,7 @@ jobs:
           **/tests*/**
 
     - name: Rename .env
-      run: mv .env.example .env
+      run: cp .env.example .env
 
     - name: Inject Production Environment Variables
       run: |
